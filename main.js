@@ -7,8 +7,8 @@ const createWindow = () => {
     width: 800,
     height: 600,
     webPreferences: {
-      preload: path.join(__dirname, 'preload.js')
-    }
+      preload: path.join(__dirname, 'preload.js'),
+    },
   })
 
   win.loadFile('index.html')
@@ -21,6 +21,10 @@ app.whenReady().then(() => {
     if (BrowserWindow.getAllWindows().length === 0) {
       createWindow()
     }
+  })
+
+  app.on('before-quit', () => {
+    alert('YESSS')
   })
 })
 
