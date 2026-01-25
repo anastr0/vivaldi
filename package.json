@@ -1,0 +1,20 @@
+{
+  "name": "vivaldi",
+  "version": "1.0.0",
+  "description": "docker compose interactive ui",
+  "homepage": "https://github.com/anastr0/vivaldi#readme",
+  "bugs": {
+    "url": "https://github.com/anastr0/vivaldi/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/anastr0/vivaldi.git"
+  },
+  "license": "ISC",
+  "author": "Anaswara T Rajan",
+  "type": "commonjs",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  }
+}
