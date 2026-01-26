@@ -21,5 +21,8 @@
   "devDependencies": {
     "electron": "^40.0.0",
     "prettier": "^3.8.1"
+  },
+  "dependencies": {
+    "dockerode": "^4.0.9"
   }
 }
