@@ -13,7 +13,7 @@ const createWindow = () => {
     },
   })
 
-  win.loadFile('index.html')
+  win.loadFile(path.join(__dirname, 'ui/index.html'))
 }
 
 ipcMain.handle('fetch-images', async () => {
