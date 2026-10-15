@@ -27,7 +27,11 @@ monaco.editor.defineTheme('vivaldi-dark', {
   },
 })
 
-export default function YamlEditor() {
+type YamlEditorProps = {
+  onChange: (value: string) => void
+}
+
+export default function YamlEditor({ onChange }: YamlEditorProps) {
   return (
     <Editor
       height="100%"
@@ -35,6 +39,7 @@ export default function YamlEditor() {
       loading={<span className="text-sm text-slate-400">Loading editor…</span>}
       defaultLanguage="yaml"
       defaultValue=""
+      onChange={(value) => onChange(value ?? '')}
       options={{
         ariaLabel: 'YAML editor',
         automaticLayout: true,
