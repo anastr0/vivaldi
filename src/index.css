@@ -1,28 +1,46 @@
-:root {
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
+@import 'tailwindcss';
+@import '@xyflow/react/dist/style.css';
+
+@layer base {
+  :root {
+    font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+    color-scheme: dark;
+    background: var(--color-slate-950);
+    color: var(--color-slate-100);
+    accent-color: var(--color-blue-700);
+  }
+
+  html,
+  body,
+  #root {
+    height: 100%;
+    margin: 0;
+  }
 }
 
-html,
-body,
-#root {
-  height: 100%;
-  margin: 0;
+.react-flow.dark {
+  --xy-background-color: var(--color-slate-950);
+  --xy-background-pattern-dots-color: var(--color-slate-700);
+  --xy-node-background-color: var(--color-slate-900);
+  --xy-node-color: var(--color-slate-100);
+  --xy-node-border: 1px solid var(--color-slate-700);
+  --xy-node-boxshadow-selected: 0 0 0 2px var(--color-blue-700);
+  --xy-handle-background-color: var(--color-blue-700);
+  --xy-handle-border-color: var(--color-slate-950);
+  --xy-edge-stroke: var(--color-slate-500);
+  --xy-edge-stroke-selected: var(--color-blue-700);
+  --xy-connectionline-stroke: var(--color-blue-700);
+  --xy-controls-button-background-color: var(--color-slate-900);
+  --xy-controls-button-background-color-hover: var(--color-blue-700);
+  --xy-controls-button-color: var(--color-slate-100);
+  --xy-controls-button-color-hover: white;
+  --xy-controls-button-border-color: var(--color-slate-800);
+  --xy-minimap-background-color: var(--color-slate-900);
+  --xy-minimap-node-background-color: var(--color-blue-700);
+  --xy-minimap-mask-background-color: rgb(2 6 23 / 65%);
 }
 
-.workspace {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-  height: 100%;
-}
-
-.editor-pane {
-  border-right: 1px solid #d1d5db;
-}
-
-.editor-pane,
-.flow-pane {
-  min-width: 0;
-  min-height: 0;
+.react-flow__controls-button:focus-visible {
+  outline: 2px solid var(--color-blue-700);
+  outline-offset: 2px;
 }
