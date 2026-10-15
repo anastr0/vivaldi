@@ -27,12 +27,13 @@ function DetailValue({ value }: { value: unknown }) {
 
 type YamlPaneProps = {
   onChange: (source: string) => void
+  isEditorEmpty: boolean
   result: { text: string; error: boolean; nodes: AppNode[]; edges: Edge[] }
   selectedNode?: AppNode
   onSelectNode: (id: string) => void
 }
 
-export default function YamlPane({ onChange, result, selectedNode, onSelectNode }: YamlPaneProps) {
+export default function YamlPane({ onChange, isEditorEmpty, result, selectedNode, onSelectNode }: YamlPaneProps) {
   const resources = result.nodes.filter(node => node.type !== 'lane')
   const connectedIds = new Set(result.edges.flatMap(edge => edge.source === selectedNode?.id
     ? [edge.target] : edge.target === selectedNode?.id ? [edge.source] : []))
@@ -45,11 +46,8 @@ export default function YamlPane({ onChange, result, selectedNode, onSelectNode 
       </section>
       <section
         className="flex min-h-0 min-w-0 flex-col border-t border-slate-800"
-        aria-labelledby="node-details-title"
+        aria-label="Node details"
       >
-        <h2 id="node-details-title" className="shrink-0 border-b border-slate-800 px-4 py-2 text-sm font-medium text-slate-300">
-          Node details
-        </h2>
         <div className="min-h-0 flex-1 overflow-auto px-4 py-3 text-xs leading-5 text-slate-300">
           {result.error ? <p role="alert" className="whitespace-pre-wrap text-red-400">{result.text}</p> : <>
             {!!resources.length && <label className="mb-3 flex items-center gap-3 text-slate-400">
@@ -86,9 +84,22 @@ export default function YamlPane({ onChange, result, selectedNode, onSelectNode 
                   </button>
                 </li>)}
               </ul> : <p className="text-slate-500">No connections.</p>}
-            </> : <p className="text-slate-400">{resources.length
+            </> : <>
+            <p className="text-slate-400">{resources.length
               ? 'Click a node in the topology or select one above to view its details.'
-              : 'Paste or type Compose YAML above, then select a node to view its details.'}</p>}
+              : 'Paste or type Compose YAML above, then select a node to view its details.'}</p>
+            {isEditorEmpty && <p className="mt-2 text-slate-400">
+              Need an example? Try a Compose YAML file from{' '}
+              <a
+                href="https://github.com/docker/awesome-compose"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="rounded text-blue-400 underline underline-offset-4 hover:text-blue-300 focus-visible:outline-2"
+              >
+                Docker Awesome Compose
+              </a>.
+            </p>}
+            </>}
           </>}
         </div>
       </section>

@@ -45,6 +45,7 @@ export default function App() {
         >
           <YamlPane
             onChange={setSource}
+            isEditorEmpty={!source.trim()}
             result={result}
             selectedNode={selectedNode}
             onSelectNode={setSelectedNodeId}
