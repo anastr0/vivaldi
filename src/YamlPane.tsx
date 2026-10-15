@@ -1,27 +1,15 @@
-import { useMemo, useState } from 'react'
-import { parse } from 'yaml'
-
 import YamlEditor from './YamlEditor'
 
-export default function YamlPane() {
-  const [source, setSource] = useState('')
-  const result = useMemo(() => {
-    if (!source.trim()) return { text: '', error: false }
+type YamlPaneProps = {
+  onChange: (source: string) => void
+  result: { text: string; error: boolean }
+}
 
-    try {
-      return { text: JSON.stringify(parse(source), null, 2), error: false }
-    } catch (error) {
-      return {
-        text: error instanceof Error ? error.message : 'Unable to parse YAML.',
-        error: true,
-      }
-    }
-  }, [source])
-
+export default function YamlPane({ onChange, result }: YamlPaneProps) {
   return (
     <div className="grid h-full min-h-0 grid-rows-2">
       <section className="min-h-0 min-w-0" aria-label="YAML editor">
-        <YamlEditor onChange={setSource} />
+        <YamlEditor onChange={onChange} />
       </section>
       <section
         className="flex min-h-0 min-w-0 flex-col border-t border-slate-800"
