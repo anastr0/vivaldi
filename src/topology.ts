@@ -49,9 +49,10 @@ export function createTopology(document: unknown): { nodes: AppNode[]; edges: Ed
     { title: 'NETWORKS', type: 'NetworkNode', prefix: 'network', names: [...networks], color: '#0d9488' },
     { title: 'STORAGE', type: 'VolumeNode', prefix: 'volume', names: [...volumes], color: '#d97706' },
   ] as const
-  const width = Math.max(720, ...lanes.map(lane => lane.names.length * 240 + 48))
+  const visibleLanes = lanes.filter(lane => lane.names.length > 0)
+  const width = Math.max(720, ...visibleLanes.map(lane => lane.names.length * 240 + 48))
   const nodes: AppNode[] = []
-  for (const [index, lane] of lanes.entries()) {
+  for (const [index, lane] of visibleLanes.entries()) {
     const parentId = `lane:${lane.prefix}`
     nodes.push({
       id: parentId, type: 'lane', position: { x: 0, y: index * 190 },
