@@ -21,6 +21,7 @@ body,
   border-right: 1px solid #d1d5db;
 }
 
+.editor-pane,
 .flow-pane {
   min-width: 0;
   min-height: 0;

@@ -14,6 +14,7 @@ import '@xyflow/react/dist/style.css'
 
 import { initialNodes, nodeTypes } from './nodes'
 import { initialEdges, edgeTypes } from './edges'
+import YamlEditor from './YamlEditor'
 
 export default function App() {
   const [nodes, , onNodesChange] = useNodesState(initialNodes)
@@ -25,7 +26,9 @@ export default function App() {
 
   return (
     <main className="workspace">
-      <section className="editor-pane" aria-label="YAML editor area" />
+      <section className="editor-pane" aria-label="YAML editor area">
+        <YamlEditor />
+      </section>
       <section className="flow-pane" aria-label="Node graph">
         <ReactFlow
           nodes={nodes}
