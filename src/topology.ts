@@ -71,6 +71,7 @@ export function createTopology(document: unknown): { nodes: AppNode[]; edges: Ed
     id: JSON.stringify([service, kind, target]), source: `service:${service}`,
     target: `${kind}:${target}`, sourceHandle: kind === 'service' ? 'dependency' : 'attachment',
     targetHandle: kind === 'service' ? 'dependency-target' : 'attachment-target',
+    animated: kind === 'network',
     type: 'straight', style: { stroke: '#94a3b8', strokeDasharray: '6 5' },
     label: kind === 'service' ? 'depends on' : undefined,
   }))
