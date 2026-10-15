@@ -14,6 +14,7 @@ export function createTopology(document: unknown): { nodes: AppNode[]; edges: Ed
   const services = record(compose.services)
   const networks = new Set(Object.keys(record(compose.networks)))
   const volumes = new Set(Object.keys(record(compose.volumes)))
+  const volumePaths = new Map<string, Set<string>>()
   const attachments: { service: string; kind: 'network' | 'volume' | 'service'; target: string }[] = []
 
   for (const [name, value] of Object.entries(services)) {
@@ -33,6 +34,12 @@ export function createTopology(document: unknown): { nodes: AppNode[]; edges: Ed
           : config.type === 'volume'
         if (named && typeof source === 'string' && source) {
           volumes.add(source)
+          const target = typeof mount === 'string' ? mount.split(':')[1] : config.target
+          if (typeof target === 'string' && target) {
+            const paths = volumePaths.get(source) ?? new Set<string>()
+            paths.add(target)
+            volumePaths.set(source, paths)
+          }
           attachments.push({ service: name, kind: 'volume', target: source })
         }
       }
@@ -44,28 +51,54 @@ export function createTopology(document: unknown): { nodes: AppNode[]; edges: Ed
     }
   }
 
+  const resourceData = (prefix: string, name: string, color: string): AppNode['data'] => {
+    const attributes: { label: string; value: string }[] = []
+    if (prefix === 'service') {
+      const service = record(services[name])
+      for (const key of ['image', 'container_name']) {
+        if (typeof service[key] === 'string' && service[key]) {
+          attributes.push({ label: key, value: service[key] })
+        }
+      }
+    } else if (prefix === 'volume') {
+      for (const path of volumePaths.get(name) ?? []) {
+        attributes.push({ label: 'Mount path', value: path })
+      }
+    }
+    const configuration = prefix === 'service' ? record(services[name])
+      : record(record(prefix === 'network' ? compose.networks : compose.volumes)[name])
+    return { label: name, color, attributes, configuration }
+  }
+  const resourceHeight = (data: AppNode['data']) => 32 + Math.ceil(data.label.length / 20) * 27
+    + (data.attributes ?? []).reduce((height, attribute) =>
+      height + 24 + Math.ceil(attribute.value.length / 28) * 18, 0)
+
   const lanes = [
     { title: 'SERVICES', type: 'ServiceNode', prefix: 'service', names: Object.keys(services), color: '#2563eb' },
     { title: 'NETWORKS', type: 'NetworkNode', prefix: 'network', names: [...networks], color: '#0d9488' },
     { title: 'STORAGE', type: 'VolumeNode', prefix: 'volume', names: [...volumes], color: '#d97706' },
   ] as const
   const visibleLanes = lanes.filter(lane => lane.names.length > 0)
-  const width = Math.max(720, ...visibleLanes.map(lane => lane.names.length * 240 + 48))
+  const width = Math.max(720, ...visibleLanes.map(lane => lane.names.length * 300 + 48))
   const nodes: AppNode[] = []
-  for (const [index, lane] of visibleLanes.entries()) {
+  let laneY = 0
+  for (const lane of visibleLanes) {
+    const height = Math.max(170, ...lane.names.map(name =>
+      resourceHeight(resourceData(lane.prefix, name, lane.color)) + 90))
     const parentId = `lane:${lane.prefix}`
     nodes.push({
-      id: parentId, type: 'lane', position: { x: 0, y: index * 190 },
+      id: parentId, type: 'lane', position: { x: 0, y: laneY },
       data: { label: lane.title, color: lane.color },
-      style: { width, height: 170 }, selectable: false, draggable: false,
+      style: { width, height }, selectable: false, draggable: false,
       connectable: false,
     })
     lane.names.forEach((name, itemIndex) => nodes.push({
       id: `${lane.prefix}:${name}`, type: lane.type, parentId,
-      position: { x: (width - lane.names.length * 240 + 40) / 2 + itemIndex * 240, y: 65 },
-      data: { label: name, color: lane.color }, draggable: false,
+      position: { x: (width - lane.names.length * 300 + 40) / 2 + itemIndex * 300, y: 65 },
+      data: resourceData(lane.prefix, name, lane.color), draggable: false,
       connectable: false, extent: 'parent',
     }))
+    laneY += height + 20
   }
   const edges: Edge[] = attachments.map(({ service, kind, target }) => ({
     id: JSON.stringify([service, kind, target]), source: `service:${service}`,

@@ -7,14 +7,17 @@ import YamlPane from './YamlPane'
 
 export default function App() {
   const [source, setSource] = useState('')
+  const [selectedNodeId, setSelectedNodeId] = useState<string | null>(null)
   const result = useMemo(() => {
     try {
       const document: unknown = source.trim() ? parse(source, { merge: true }) : null
-      return { text: source.trim() ? JSON.stringify(document, null, 2) ?? '' : '', error: false, ...createTopology(document) }
+      return { text: '', error: false, ...createTopology(document) }
     } catch (error) {
       return { text: error instanceof Error ? error.message : 'Unable to parse YAML.', error: true, ...createTopology(null) }
     }
   }, [source])
+  const selectedNode = result.nodes.find(node => node.id === selectedNodeId && node.type !== 'lane')
+  const displayNodes = result.nodes.map(node => ({ ...node, selected: node.id === selectedNode?.id }))
   const layoutKey = result.nodes.map(node => node.id).join('|')
 
   return (
@@ -40,18 +43,25 @@ export default function App() {
           className="min-h-0 min-w-0 border-r border-slate-800"
           aria-label="YAML workspace"
         >
-          <YamlPane onChange={setSource} result={result} />
+          <YamlPane
+            onChange={setSource}
+            result={result}
+            selectedNode={selectedNode}
+            onSelectNode={setSelectedNodeId}
+          />
         </section>
         <section className="min-h-0 min-w-0" aria-label="Node graph">
           <ReactFlow
             colorMode="dark"
             key={layoutKey}
-            nodes={result.nodes}
+            nodes={displayNodes}
             nodeTypes={nodeTypes}
             edges={result.edges}
             nodesDraggable={false}
             nodesConnectable={false}
-            elementsSelectable={false}
+            elementsSelectable
+            onNodeClick={(_, node) => { if (node.type !== 'lane') setSelectedNodeId(node.id) }}
+            onPaneClick={() => setSelectedNodeId(null)}
             fitViewOptions={{ padding: 0.12 }}
             fitView
           >

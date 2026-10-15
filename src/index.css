@@ -58,8 +58,9 @@
 }
 
 .topology-resource {
-  width: 200px;
+  width: 260px;
   min-height: 62px;
+  flex-direction: column;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -76,4 +77,77 @@
 .topology-resource .react-flow__handle {
   opacity: 0;
   pointer-events: none;
+}
+
+.topology-resource-title {
+  line-height: 27px;
+}
+
+.topology-attributes {
+  width: 100%;
+  margin: 8px 0 0;
+  text-align: left;
+  font-size: 12px;
+  line-height: 18px;
+}
+
+.topology-attributes > div {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.topology-attributes > div + div {
+  margin-top: 4px;
+}
+
+.topology-attributes dt {
+  flex-shrink: 0;
+  color: #94a3b8;
+}
+
+.topology-attributes dt::after {
+  content: ":";
+}
+
+.topology-attributes dd {
+  min-width: 0;
+  overflow-wrap: anywhere;
+  margin: 0;
+  font-family: monospace;
+}
+
+.react-flow__node.selected .topology-resource {
+  box-shadow: 0 0 0 3px #020617, 0 0 0 5px var(--node-color);
+}
+
+.react-flow__node:focus-visible .topology-resource {
+  outline: 2px solid white;
+  outline-offset: 4px;
+}
+
+.detail-fields {
+  min-width: 0;
+}
+
+.detail-field {
+  display: grid;
+  grid-template-columns: minmax(80px, 120px) minmax(0, 1fr);
+  gap: 12px;
+  padding: 3px 0;
+  border-bottom: 1px solid rgb(30 41 59 / 45%);
+}
+
+.detail-field > dt {
+  overflow-wrap: anywhere;
+  color: #94a3b8;
+}
+
+.detail-field > dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.detail-fields .detail-fields .detail-field {
+  grid-template-columns: minmax(64px, 100px) minmax(0, 1fr);
 }
