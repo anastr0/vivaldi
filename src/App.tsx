@@ -24,19 +24,24 @@ export default function App() {
   )
 
   return (
-    <ReactFlow
-      nodes={nodes}
-      nodeTypes={nodeTypes}
-      onNodesChange={onNodesChange}
-      edges={edges}
-      edgeTypes={edgeTypes}
-      onEdgesChange={onEdgesChange}
-      onConnect={onConnect}
-      fitView
-    >
-      <Background />
-      <MiniMap />
-      <Controls />
-    </ReactFlow>
+    <main className="workspace">
+      <section className="editor-pane" aria-label="YAML editor area" />
+      <section className="flow-pane" aria-label="Node graph">
+        <ReactFlow
+          nodes={nodes}
+          nodeTypes={nodeTypes}
+          onNodesChange={onNodesChange}
+          edges={edges}
+          edgeTypes={edgeTypes}
+          onEdgesChange={onEdgesChange}
+          onConnect={onConnect}
+          fitView
+        >
+          <Background />
+          <MiniMap />
+          <Controls />
+        </ReactFlow>
+      </section>
+    </main>
   )
 }
