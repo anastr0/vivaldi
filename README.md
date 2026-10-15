@@ -38,5 +38,3 @@ The build includes TypeScript checking and writes the production site to `dist/`
 - `src/nodes/`: initial nodes, custom position node, and node types.
 - `src/edges/`: initial edges and edge types.
 - `src/main.tsx` and `src/index.css`: browser entry point and full-height layout.
-
-The Electron runtime and Docker image listing have been removed. No Docker daemon is required.
